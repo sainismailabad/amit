@@ -1,0 +1,18 @@
+# SEO: robots.txt for Ibad Foodz
+User-agent: *
+Allow: /
+Disallow: /admin.html
+Disallow: /seller.html
+Disallow: /delivery.html
+Disallow: /admin.js
+Disallow: /seller.js
+Disallow: /customer.js
+Disallow: /auth.js
+Disallow: /firebase-config.js
+Disallow: /invoice.js
+
+# Sitemap
+Sitemap: https://ibadecomerce.firebaseapp.com/sitemap.xml
+
+# Crawl delay (be polite to servers)
+Crawl-delay: 10
