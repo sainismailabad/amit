@@ -135,15 +135,19 @@
             _ringtoneTimers: null, _ringtoneActive: false,
 
             isOrderVisibleToDelivery: function(order) {
-                if (!order || order.status === 'Delivered' || order.status === 'Cancelled') return false;
+                if (!order) return false;
                 
-                // ✅ Show my own accepted orders (so they don't disappear after accepting)
-                if (order.deliveryPartnerId && order.deliveryPartnerId === this.currentUser.uid) return true;
+                // Hide delivered or cancelled orders
+                if (order.status === 'Delivered' || order.status === 'Cancelled') return false;
                 
-                // Don't show orders assigned to other delivery partners
-                if (order.deliveryPartnerId && order.deliveryPartnerId !== this.currentUser.uid) return false;
-
-                // show when unassigned AND status is in pickup stages before delivered
+                // 🔥 CRITICAL: If ANY delivery partner is assigned to this order,
+                // then ONLY that delivery partner can see it.
+                // Ek order sirf ussi delivery boy ko dikhega jisne accept kiya hai.
+                if (order.deliveryPartnerId) {
+                    return order.deliveryPartnerId === this.currentUser.uid;
+                }
+                
+                // For UNASSIGNED orders - show only if they are in valid pickup stages
                 const s = String(order.status || '').toLowerCase();
                 const visibleBeforePickup = ['assigned', 'accepted', 'preparing', 'shipped', 'reached restaurant', 'picked up', 'out for delivery'].includes(s);
                 return visibleBeforePickup;
