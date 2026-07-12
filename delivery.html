@@ -136,14 +136,17 @@
 
             isOrderVisibleToDelivery: function(order) {
                 if (!order || order.status === 'Delivered' || order.status === 'Cancelled') return false;
-                // Only show orders for this flow: Assigned -> ...
+                
+                // ✅ Show my own accepted orders (so they don't disappear after accepting)
+                if (order.deliveryPartnerId && order.deliveryPartnerId === this.currentUser.uid) return true;
+                
+                // Don't show orders assigned to other delivery partners
                 if (order.deliveryPartnerId && order.deliveryPartnerId !== this.currentUser.uid) return false;
 
                 // show when unassigned AND status is in pickup stages before delivered
-                // (we keep compatibility with old statuses: Accepted/Preparing/Shipped/Out for Delivery)
                 const s = String(order.status || '').toLowerCase();
                 const visibleBeforePickup = ['assigned', 'accepted', 'preparing', 'shipped', 'reached restaurant', 'picked up', 'out for delivery'].includes(s);
-                return !order.deliveryPartnerId && visibleBeforePickup;
+                return visibleBeforePickup;
             },
 
             // ===== EXACT DELIVERY FEE FROM ORDER =====
