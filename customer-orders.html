@@ -306,7 +306,7 @@
                         order_id: orderId.slice(-6).toUpperCase(),
                         email: customerEmail,
                         orders: (order.items || []).map(item => ({
-                            image_url: (item.image_url || item.image || ''),
+                            image_url: (item.image_url || (item.images && item.images.length > 0 ? item.images[0] : '') || item.image || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=200'),
                             name: item.name,
                             units: item.qty,
                             price: item.price
